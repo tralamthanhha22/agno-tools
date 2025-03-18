@@ -16,7 +16,7 @@ pip freeze > requirements.txt
 
 ```
 # Use an official Python runtime as a parent image
-FROM python:3.11
+FROM python:3.11<br>
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -40,58 +40,58 @@ CMD ["python", "persistent.py"]```
 
 
 ```
-services:
-  persistent_app:
-    build: .
-    container_name: persistent_app
-    depends_on:
-      - my_pgvector
-      - ollama
-    environment:
-      DATABASE_HOST: my_pgvector
-      DATABASE_PORT: 5432
-      DATABASE_USER: user
-      DATABASE_PASSWORD: 1
-      DATABASE_NAME: mydb
-      OLLAMA_HOST: ollama  # Thêm host của Ollama
-    networks:
-      - my_network
-
-  my_pgvector:
-    image: ankane/pgvector
-    container_name: my_pgvector
-    restart: always
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: 1
-      POSTGRES_DB: mydb
-    ports:
-      - "5432:5432"
-    networks:
-      - my_network
-
-  ollama:
-    image: ollama/ollama
-    container_name: ollama
-    restart: always
-    ports:
-      - "11434:11434"
-    networks:
-      - my_network
-    volumes:
-      - ollama_data:/root/.ollama  # Lưu cache model để tránh tải lại mỗi lần chạy
-    command: ["serve"]  # Chạy Ollama ở chế độ server
-
-networks:
-  my_network:
-    driver: bridge
-
-volumes:
-  ollama_data:```
-
-
-
-### Run docker-compose
+services:  
+  persistent_app:  
+    build: .  
+    container_name: persistent_app  
+    depends_on:  
+      - my_pgvector  
+      - ollama  
+    environment:  
+      DATABASE_HOST: my_pgvector  
+      DATABASE_PORT: 5432  
+      DATABASE_USER: user  
+      DATABASE_PASSWORD: 1  
+      DATABASE_NAME: mydb  
+      OLLAMA_HOST: ollama  # Thêm host của Ollama  
+    networks:  
+      - my_network  
+  
+  my_pgvector:  
+    image: ankane/pgvector  
+    container_name: my_pgvector  
+    restart: always  
+    environment:  
+      POSTGRES_USER: user  
+      POSTGRES_PASSWORD: 1  
+      POSTGRES_DB: mydb  
+    ports:  
+      - "5432:5432"  
+    networks:  
+      - my_network  
+  
+  ollama:  
+    image: ollama/ollama  
+    container_name: ollama  
+    restart: always  
+    ports:  
+      - "11434:11434"  
+    networks:  
+      - my_network  
+    volumes:  
+      - ollama_data:/root/.ollama  # Lưu cache model để tránh tải lại mỗi lần chạy  
+    command: ["serve"]  # Chạy Ollama ở chế độ server  
+  
+networks:  
+  my_network:  
+    driver: bridge  
+  
+volumes:  
+  ollama_data:```  
+  
+  
+  
+### Run docker-compose  
 
 ```
 docker-compose up --force-recreate --build -d
